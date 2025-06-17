@@ -16,4 +16,9 @@ class Promo extends Model
         'new_price',
         'description',
     ];
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
 }
