@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Promo;
@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class PromoController extends Controller
 {
-    public function readAll()
+    function readAll()
     {
         $promos = Promo::with('shop')->get();
 
@@ -17,20 +17,20 @@ class PromoController extends Controller
         ], 200);
     }
 
-    public function readLimit()
+    function readLimit()
     {
         $promos = Promo::orderBy('created_at', 'desc')
             ->limit(5)
             ->with('shop')
             ->get();
 
-        if ($promos->count() > 0) {
+        if (count($promos) > 0) {
             return response()->json([
                 'data' => $promos,
             ], 200);
         } else {
             return response()->json([
-                'message' => 'Not found',
+                'message' => 'not found',
                 'data' => $promos,
             ], 404);
         }

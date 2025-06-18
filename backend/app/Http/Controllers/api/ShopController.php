@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    public function readAll()
+    function readAll()
     {
         $shops = Shop::all();
 
@@ -21,6 +21,24 @@ class ShopController extends Controller
     {
         $shops = Shop::orderBy('rate', 'desc')
             ->limit(5)
+            ->get();
+
+        if (count($shops) > 0) {
+            return response()->json([
+                'data' => $shops,
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'not found',
+                'data' => $shops,
+            ], 404);
+        }
+    }
+
+    function searchByCity($name)
+    {
+        $shops = Shop::where('city', 'like', '%' . $name . '%')
+            ->orderBy('name')
             ->get();
 
         if (count($shops) > 0) {
