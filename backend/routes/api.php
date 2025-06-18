@@ -17,6 +17,7 @@ Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
   Route::get('/laundry/user/{id}', [LaundryController::class, 'whereUserId']);
+  Route::post('/laundry/claim', [LaundryController::class, 'claim']);
 
   Route::get('/promo/limit', [PromoController::class, 'readLimit']);
 

@@ -35,4 +35,37 @@ class LaundryController extends Controller
             ], 404);
         }
     }
+
+    function claim(Request $request)
+    {
+        $laundry = Laundry::where([
+            ['id', '=', $request->id],
+            ['claim_code', '=', $request->claim_code],
+        ])->first();
+
+        if (!$laundry) {
+            return response()->json([
+                'message' => 'not found',
+            ], 404);
+        }
+
+        if ($laundry->user_id != 0) {
+            return response()->json([
+                'message' => 'Laundry has been claimed',
+            ], 400);
+        }
+
+        $laundry->user_id = $request->user_id;
+        $updated = $laundry->save();
+
+        if ($updated) {
+            return response()->json([
+                'data' => $updated,
+            ], 201);
+        } else {
+            return response()->json([
+                'message' => 'can not be updated'
+            ], 500);
+        }
+    }
 }
