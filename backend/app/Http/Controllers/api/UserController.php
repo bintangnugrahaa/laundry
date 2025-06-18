@@ -5,10 +5,14 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class UserController extends Controller
 {
+    use ValidatesRequests;
+
     public function readAll()
     {
         $users = User::all();
@@ -35,5 +39,22 @@ class UserController extends Controller
         return response()->json([
             'data' => $user,
         ], 201);
+    }
+
+    public function login(Request $request)
+    {
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'data' => $user,
+            'token' => $token,
+        ], 200);
     }
 }
