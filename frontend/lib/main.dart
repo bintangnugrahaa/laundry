@@ -13,30 +13,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          primaryColor: Colors.green,
-          scaffoldBackgroundColor: Colors.white,
-          colorScheme: ColorScheme.light(
-            primary: Colors.green,
-            secondary: Colors.greenAccent[400]!,
-          ),
-          textTheme: GoogleFonts.latoTextTheme(),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-              backgroundColor: const MaterialStatePropertyAll(Colors.green),
-              shape: MaterialStatePropertyAll(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              padding: const MaterialStatePropertyAll(
-                EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              ),
-              textStyle: const MaterialStatePropertyAll(
-                TextStyle(fontSize: 15),
+        primaryColor: Colors.green,
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.light(
+          primary: Colors.green,
+          secondary: Colors.greenAccent[400]!,
+        ),
+        textTheme: GoogleFonts.latoTextTheme(),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: const WidgetStatePropertyAll(Colors.green),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
-          )),
-      home: Scaffold(
+            padding: const WidgetStatePropertyAll(
+              EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+            textStyle: const WidgetStatePropertyAll(
+              TextStyle(fontSize: 15),
+            ),
+          ),
+        ),
+      ),
+      home: const Scaffold(
         body: Center(
           child: Text('Hello World'),
         ),
