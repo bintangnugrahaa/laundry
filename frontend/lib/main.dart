@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/config/app_colors.dart';
 import 'package:frontend/pages/auth/register_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -39,7 +44,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: RegisterPage(),
+      home: const RegisterPage(),
     );
   }
 }

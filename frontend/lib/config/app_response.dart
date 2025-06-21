@@ -11,11 +11,11 @@ class AppResponse {
     DMethod.printResponse(response);
 
     switch (response.statusCode) {
-      case 200:
-      case 201:
+      case 200: // read
+      case 201: // create, update
         var responseBody = jsonDecode(response.body);
         return responseBody;
-      case 204:
+      case 204: // delete
         return {'success': true};
       case 400:
         throw BadRequestFailure(response.body);
@@ -65,7 +65,12 @@ class AppResponse {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('Close'),
+                child: const Text(
+                  'Close',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],

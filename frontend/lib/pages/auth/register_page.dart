@@ -3,23 +3,25 @@ import 'package:d_info/d_info.dart';
 import 'package:d_input/d_input.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/config/app_assets.dart';
-import 'package:frontend/config/app_colors.dart';
-import 'package:frontend/config/app_constants.dart';
-import 'package:frontend/config/app_response.dart';
-import 'package:frontend/config/failure.dart';
-import 'package:frontend/datasource/user_datasource.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../config/app_assets.dart';
+import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
+import '../../config/app_response.dart';
+import '../../config/failure.dart';
+import '../../datasources/user_datasource.dart';
+import '../../providers/register_provider.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final edtUsername = TextEditingController();
   final edtEmail = TextEditingController();
   final edtPassword = TextEditingController();
@@ -28,6 +30,8 @@ class RegisterPageState extends State<RegisterPage> {
   execute() {
     bool validInput = formKey.currentState!.validate();
     if (!validInput) return;
+
+    setRegisterStatus(ref, 'Loading');
 
     UserDatasource.register(
       edtUsername.text,
@@ -69,9 +73,11 @@ class RegisterPageState extends State<RegisterPage> {
               newStatus = failure.message ?? '-';
               break;
           }
+          setRegisterStatus(ref, newStatus);
         },
         (result) {
           DInfo.toastSuccess('Register Success');
+          setRegisterStatus(ref, 'Success');
         },
       );
     });
@@ -245,18 +251,25 @@ class RegisterPageState extends State<RegisterPage> {
                             ),
                             DView.spaceWidth(10),
                             Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => execute(),
-                                style: const ButtonStyle(
-                                  alignment: Alignment.centerLeft,
-                                ),
-                                child: const Text(
-                                  'Register',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                              child: Consumer(builder: (_, wiRef, __) {
+                                String status =
+                                    wiRef.watch(registerStatusProvider);
+                                if (status == 'Loading') {
+                                  return DView.loadingCircle();
+                                }
+                                return ElevatedButton(
+                                  onPressed: () => execute(),
+                                  style: const ButtonStyle(
+                                    alignment: Alignment.centerLeft,
                                   ),
-                                ),
-                              ),
+                                  child: const Text(
+                                    'Register',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                );
+                              }),
                             ),
                           ],
                         ),
