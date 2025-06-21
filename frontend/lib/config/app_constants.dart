@@ -1,5 +1,5 @@
 class AppConstants {
-  static const appName = 'Di Laundry';
+  static const appName = 'Star Laundry';
 
   static const _host = 'http://192.168.80.1:8000';
 
