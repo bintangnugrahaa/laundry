@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/config/app_colors.dart';
+import 'package:frontend/pages/auth/login_page.dart';
 import 'package:frontend/pages/auth/register_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -44,7 +45,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const RegisterPage(),
+      // home: const RegisterPage(),
+      home: const LoginPage(),
     );
   }
 }
