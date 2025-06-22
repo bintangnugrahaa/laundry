@@ -4,8 +4,10 @@ import 'package:d_input/d_input.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/config/app_session.dart';
 import 'package:frontend/config/nav.dart';
 import 'package:frontend/pages/auth/register_page.dart';
+import 'package:frontend/pages/dashboard_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../config/app_assets.dart';
@@ -29,59 +31,61 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final formKey = GlobalKey<FormState>();
 
   execute() {
-    // bool validInput = formKey.currentState!.validate();
-    // if (!validInput) return;
+    bool validInput = formKey.currentState!.validate();
+    if (!validInput) return;
 
     // setRegisterStatus(ref, 'Loading');
 
-    // UserDatasource.register(
-    //   edtUsername.text,
-    //   edtEmail.text,
-    //   edtPassword.text,
-    // ).then((value) {
-    //   String newStatus = '';
+    UserDatasource.login(
+      edtEmail.text,
+      edtPassword.text,
+    ).then((value) {
+      String newStatus = '';
 
-    //   value.fold(
-    //     (failure) {
-    //       switch (failure.runtimeType) {
-    //         case ServerFailure:
-    //           newStatus = 'Server Error';
-    //           DInfo.toastError(newStatus);
-    //           break;
-    //         case NotFoundFailure:
-    //           newStatus = 'Error Not Found';
-    //           DInfo.toastError(newStatus);
-    //           break;
-    //         case ForbiddenFailure:
-    //           newStatus = 'You don\'t have access';
-    //           DInfo.toastError(newStatus);
-    //           break;
-    //         case BadRequestFailure:
-    //           newStatus = 'Bad request';
-    //           DInfo.toastError(newStatus);
-    //           break;
-    //         case InvalidInputFailure:
-    //           newStatus = 'Invalid Input';
-    //           AppResponse.invalidInput(context, failure.message ?? '{}');
-    //           break;
-    //         case UnauthorisedFailure:
-    //           newStatus = 'Unauthorised';
-    //           DInfo.toastError(newStatus);
-    //           break;
-    //         default:
-    //           newStatus = 'Request Error';
-    //           DInfo.toastError(newStatus);
-    //           newStatus = failure.message ?? '-';
-    //           break;
-    //       }
-    //       setRegisterStatus(ref, newStatus);
-    //     },
-    //     (result) {
-    //       DInfo.toastSuccess('Register Success');
-    //       setRegisterStatus(ref, 'Success');
-    //     },
-    //   );
-    // });
+      value.fold(
+        (failure) {
+          switch (failure.runtimeType) {
+            case ServerFailure:
+              newStatus = 'Server Error';
+              DInfo.toastError(newStatus);
+              break;
+            case NotFoundFailure:
+              newStatus = 'Error Not Found';
+              DInfo.toastError(newStatus);
+              break;
+            case ForbiddenFailure:
+              newStatus = 'You don\'t have access';
+              DInfo.toastError(newStatus);
+              break;
+            case BadRequestFailure:
+              newStatus = 'Bad request';
+              DInfo.toastError(newStatus);
+              break;
+            case InvalidInputFailure:
+              newStatus = 'Invalid Input';
+              AppResponse.invalidInput(context, failure.message ?? '{}');
+              break;
+            case UnauthorisedFailure:
+              newStatus = 'Unauthorised';
+              DInfo.toastError(newStatus);
+              break;
+            default:
+              newStatus = 'Request Error';
+              DInfo.toastError(newStatus);
+              newStatus = failure.message ?? '-';
+              break;
+          }
+          // setRegisterStatus(ref, newStatus);
+        },
+        (result) {
+          AppSession.setUser(result['data']);
+          AppSession.setBearerToken(result['token']);
+          DInfo.toastSuccess('Login Success');
+          // setRegisterStatus(ref, 'Success');
+          Nav.replace(context, const DashboardPage());
+        },
+      );
+    });
   }
 
   @override
