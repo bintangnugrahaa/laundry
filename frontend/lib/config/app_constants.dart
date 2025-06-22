@@ -1,3 +1,6 @@
+import 'package:d_view/d_view.dart';
+import 'package:flutter/material.dart';
+
 class AppConstants {
   static const appName = 'Star Laundry';
 
@@ -17,5 +20,31 @@ class AppConstants {
     'Ironed',
     'Done',
     'Delivery'
+  ];
+
+  static List<Map> navMenuDashboard = [
+    {
+      'view': DView.empty('Home'),
+      'icon': Icons.home_filled,
+      'label': 'Home',
+    },
+    {
+      'view': DView.empty('My Laundry'),
+      'icon': Icons.local_laundry_service,
+      'label': 'My Laundry',
+    },
+    {
+      'view': DView.empty('Account'),
+      'icon': Icons.account_circle,
+      'label': 'Account',
+    },
+  ];
+
+  static const homeCategories = [
+    'All',
+    'Regular',
+    'Express',
+    'Economical',
+    'Exlusive',
   ];
 }
