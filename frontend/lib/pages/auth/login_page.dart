@@ -4,19 +4,18 @@ import 'package:d_input/d_input.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/config/app_assets.dart';
+import 'package:frontend/config/app_colors.dart';
+import 'package:frontend/config/app_constants.dart';
+import 'package:frontend/config/app_response.dart';
 import 'package:frontend/config/app_session.dart';
+import 'package:frontend/config/failure.dart';
 import 'package:frontend/config/nav.dart';
+import 'package:frontend/datasources/user_datasource.dart';
 import 'package:frontend/pages/auth/register_page.dart';
 import 'package:frontend/pages/dashboard_page.dart';
+import 'package:frontend/providers/login_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../config/app_assets.dart';
-import '../../config/app_colors.dart';
-import '../../config/app_constants.dart';
-import '../../config/app_response.dart';
-import '../../config/failure.dart';
-import '../../datasources/user_datasource.dart';
-import '../../providers/register_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -34,7 +33,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     bool validInput = formKey.currentState!.validate();
     if (!validInput) return;
 
-    // setRegisterStatus(ref, 'Loading');
+    setLoginStatus(ref, 'Loading');
 
     UserDatasource.login(
       edtEmail.text,
@@ -66,7 +65,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               AppResponse.invalidInput(context, failure.message ?? '{}');
               break;
             case UnauthorisedFailure:
-              newStatus = 'Unauthorised';
+              newStatus = 'Login Failed';
               DInfo.toastError(newStatus);
               break;
             default:
@@ -75,13 +74,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               newStatus = failure.message ?? '-';
               break;
           }
-          // setRegisterStatus(ref, newStatus);
+          setLoginStatus(ref, newStatus);
         },
         (result) {
           AppSession.setUser(result['data']);
           AppSession.setBearerToken(result['token']);
           DInfo.toastSuccess('Login Success');
-          // setRegisterStatus(ref, 'Success');
+          setLoginStatus(ref, 'Success');
           Nav.replace(context, const DashboardPage());
         },
       );
@@ -229,7 +228,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             Expanded(
                               child: Consumer(builder: (_, wiRef, __) {
                                 String status =
-                                    wiRef.watch(registerStatusProvider);
+                                    wiRef.watch(loginStatusProvider);
                                 if (status == 'Loading') {
                                   return DView.loadingCircle();
                                 }
