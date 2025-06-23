@@ -1,5 +1,6 @@
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/dashboard_view/account_view.dart';
 
 class AppConstants {
   static const appName = 'Star Laundry';
@@ -34,7 +35,7 @@ class AppConstants {
       'label': 'My Laundry',
     },
     {
-      'view': DView.empty('Account'),
+      'view': const AccountView(),
       'icon': Icons.account_circle,
       'label': 'Account',
     },
