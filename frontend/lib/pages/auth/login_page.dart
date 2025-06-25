@@ -1,4 +1,4 @@
-import 'dart:ui'; // Diperlukan untuk ImageFilter.blur
+import 'dart:ui';
 
 import 'package:d_button/d_button.dart';
 import 'package:d_info/d_info.dart';
@@ -32,7 +32,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final edtPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  // State untuk kontrol visibilitas password
   bool isPasswordVisible = false;
 
   @override
@@ -42,7 +41,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     super.dispose();
   }
 
-  // --- LOGIKA TIDAK DIUBAH SAMA SEKALI ---
   execute() {
     bool validInput = formKey.currentState!.validate();
     if (!validInput) return;
@@ -100,7 +98,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       );
     });
   }
-  // --- END OF LOGIC ---
 
   @override
   Widget build(BuildContext context) {
@@ -108,12 +105,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Background Image
           Image.asset(
             AppAssets.bgAuth,
             fit: BoxFit.cover,
           ),
-          // 2. Main Content
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -136,7 +131,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  // Widget untuk Header (Judul Aplikasi & Subjudul)
   Widget _buildHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +163,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  // Widget untuk Form dengan efek "Frosted Glass"
   Widget _buildGlassmorphismForm() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
@@ -203,7 +196,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  // Widget untuk Input Email
   Widget _buildEmailField() {
     return TextFormField(
       controller: edtEmail,
@@ -232,7 +224,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  // Widget untuk Input Password
   Widget _buildPasswordField() {
     return TextFormField(
       controller: edtPassword,
@@ -274,7 +265,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  // Widget untuk Tombol Login
   Widget _buildLoginButton() {
     return Consumer(builder: (_, wiRef, __) {
       String status = wiRef.watch(loginStatusProvider);
@@ -302,7 +292,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
   }
 
-  // Widget untuk Navigasi ke Halaman Register
   Widget _buildRegisterRedirect() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -318,7 +307,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           child: Text(
             'Register Now',
             style: GoogleFonts.poppins(
-              color: AppColors.primary, // Gunakan warna primer yang menonjol
+              color: AppColors.primary,
               fontWeight: FontWeight.bold,
               fontSize: 14,
               decoration: TextDecoration.underline,

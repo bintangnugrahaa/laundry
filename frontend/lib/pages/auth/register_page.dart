@@ -1,4 +1,4 @@
-import 'dart:ui'; // Diperlukan untuk ImageFilter.blur
+import 'dart:ui';
 
 import 'package:d_button/d_button.dart';
 import 'package:d_info/d_info.dart';
@@ -29,7 +29,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final edtPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  // State untuk kontrol visibilitas password
   bool isPasswordVisible = false;
 
   @override
@@ -40,7 +39,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     super.dispose();
   }
 
-  // --- LOGIKA TIDAK DIUBAH SAMA SEKALI ---
   execute() {
     bool validInput = formKey.currentState!.validate();
     if (!validInput) return;
@@ -92,13 +90,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         (result) {
           DInfo.toastSuccess('Register Success. Please Login.');
           setRegisterStatus(ref, 'Success');
-          // Kembali ke halaman login setelah berhasil register
           Navigator.pop(context);
         },
       );
     });
   }
-  // --- END OF LOGIC ---
 
   @override
   Widget build(BuildContext context) {
@@ -106,14 +102,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Background Image
           Image.asset(
             AppAssets.bgAuth,
             fit: BoxFit.cover,
           ),
-          // 2. Tombol Kembali
-          _buildBackButton(context),
-          // 3. Main Content
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -136,22 +128,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  // Widget untuk Tombol Kembali ke Halaman Sebelumnya
-  Widget _buildBackButton(BuildContext context) {
-    return Positioned(
-      top: 40,
-      left: 10,
-      child: SafeArea(
-        child: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 30),
-          onPressed: () => Navigator.pop(context),
-          tooltip: 'Back to Login',
-        ),
-      ),
-    );
-  }
-
-  // Widget untuk Header (Judul & Subjudul)
   Widget _buildHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +160,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  // Widget untuk Form dengan efek "Frosted Glass"
   Widget _buildGlassmorphismForm() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
@@ -220,7 +195,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  // Widget untuk Input Field (DRY - Don't Repeat Yourself)
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -301,7 +275,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     );
   }
 
-  // Widget untuk Tombol Register
   Widget _buildRegisterButton() {
     return Consumer(builder: (_, wiRef, __) {
       String status = wiRef.watch(registerStatusProvider);
@@ -329,7 +302,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     });
   }
 
-  // Widget untuk Navigasi ke Halaman Login
   Widget _buildLoginRedirect(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

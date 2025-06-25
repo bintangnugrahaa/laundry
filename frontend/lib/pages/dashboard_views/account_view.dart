@@ -38,7 +38,6 @@ class AccountView extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.all(0),
           children: [
-            // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 48, 24, 16),
               child: Text(
@@ -51,7 +50,6 @@ class AccountView extends StatelessWidget {
               ),
             ),
 
-            // Profile Section
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               padding: const EdgeInsets.all(16),
@@ -107,7 +105,6 @@ class AccountView extends StatelessWidget {
               ),
             ),
 
-            // Account Actions
             _buildSectionTitle('Account Settings'),
             _buildListTile(
               icon: Icons.person_outline,
@@ -140,7 +137,6 @@ class AccountView extends StatelessWidget {
               ),
             ),
 
-            // App Settings
             _buildSectionTitle('App Settings'),
             _buildSwitchTile(
               icon: Icons.dark_mode_outlined,
@@ -159,7 +155,6 @@ class AccountView extends StatelessWidget {
               onTap: () {},
             ),
 
-            // Support
             _buildSectionTitle('Support'),
             _buildListTile(
               icon: Icons.feedback_outlined,
