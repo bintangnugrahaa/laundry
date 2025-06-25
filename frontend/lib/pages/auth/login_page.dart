@@ -1,21 +1,24 @@
+import 'dart:ui'; // Diperlukan untuk ImageFilter.blur
+
 import 'package:d_button/d_button.dart';
 import 'package:d_info/d_info.dart';
 import 'package:d_input/d_input.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/config/app_assets.dart';
-import 'package:frontend/config/app_colors.dart';
-import 'package:frontend/config/app_constants.dart';
-import 'package:frontend/config/app_response.dart';
-import 'package:frontend/config/app_session.dart';
-import 'package:frontend/config/failure.dart';
-import 'package:frontend/config/nav.dart';
-import 'package:frontend/datasources/user_datasource.dart';
-import 'package:frontend/pages/auth/register_page.dart';
-import 'package:frontend/pages/dashboard_page.dart';
-import 'package:frontend/providers/login_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../config/app_assets.dart';
+import '../../config/app_colors.dart';
+import '../../config/app_constants.dart';
+import '../../config/app_response.dart';
+import '../../config/app_session.dart';
+import '../../config/failure.dart';
+import '../../config/nav.dart';
+import '../../datasources/user_datasource.dart';
+import '../../providers/login_provider.dart';
+import '../dashboard_page.dart';
+import 'register_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -29,6 +32,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final edtPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
+  // State untuk kontrol visibilitas password
+  bool isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    edtEmail.dispose();
+    edtPassword.dispose();
+    super.dispose();
+  }
+
+  // --- LOGIKA TIDAK DIUBAH SAMA SEKALI ---
   execute() {
     bool validInput = formKey.currentState!.validate();
     if (!validInput) return;
@@ -53,7 +67,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               DInfo.toastError(newStatus);
               break;
             case ForbiddenFailure:
-              newStatus = 'You don\'t have access';
+              newStatus = "You don't have access";
               DInfo.toastError(newStatus);
               break;
             case BadRequestFailure:
@@ -65,7 +79,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               AppResponse.invalidInput(context, failure.message ?? '{}');
               break;
             case UnauthorisedFailure:
-              newStatus = 'Login Failed';
+              newStatus = 'Login Failed. Check your email and password.';
               DInfo.toastError(newStatus);
               break;
             default:
@@ -86,6 +100,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       );
     });
   }
+  // --- END OF LOGIC ---
 
   @override
   Widget build(BuildContext context) {
@@ -93,170 +108,225 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
+          // 1. Background Image
           Image.asset(
             AppAssets.bgAuth,
             fit: BoxFit.cover,
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: MediaQuery.of(context).size.height / 2,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.transparent,
-                    Colors.black54,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
+          // 2. Main Content
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 60),
+                  _buildHeader(),
+                  const SizedBox(height: 40),
+                  _buildGlassmorphismForm(),
+                  const SizedBox(height: 30),
+                  _buildRegisterRedirect(),
+                  const SizedBox(height: 30),
+                ],
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(30, 60, 30, 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Column(
-                    children: [
-                      Text(
-                        AppConstants.appName,
-                        style: GoogleFonts.poppins(
-                          fontSize: 40,
-                          color: Colors.green[900],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Container(
-                        height: 5,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            AspectRatio(
-                              aspectRatio: 1,
-                              child: Material(
-                                color: Colors.white70,
-                                borderRadius: BorderRadius.circular(10),
-                                child: const Icon(
-                                  Icons.email,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                            DView.spaceWidth(10),
-                            Expanded(
-                              child: DInput(
-                                controller: edtEmail,
-                                fillColor: Colors.white70,
-                                hint: 'Email',
-                                radius: BorderRadius.circular(10),
-                                validator: (input) =>
-                                    input == '' ? "Don't empty" : null,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DView.spaceHeight(16),
-                      IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            AspectRatio(
-                              aspectRatio: 1,
-                              child: Material(
-                                color: Colors.white70,
-                                borderRadius: BorderRadius.circular(10),
-                                child: const Icon(
-                                  Icons.key,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                            DView.spaceWidth(10),
-                            Expanded(
-                              child: DInputPassword(
-                                controller: edtPassword,
-                                fillColor: Colors.white70,
-                                hint: 'Password',
-                                radius: BorderRadius.circular(10),
-                                validator: (input) =>
-                                    input == '' ? "Don't empty" : null,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      DView.spaceHeight(),
-                      IntrinsicHeight(
-                        child: Row(
-                          children: [
-                            AspectRatio(
-                              aspectRatio: 1,
-                              child: DButtonFlat(
-                                onClick: () {
-                                  Nav.push(context, const RegisterPage());
-                                },
-                                padding: const EdgeInsets.all(0),
-                                radius: 10,
-                                mainColor: Colors.white70,
-                                child: const Text(
-                                  'REG',
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DView.spaceWidth(10),
-                            Expanded(
-                              child: Consumer(builder: (_, wiRef, __) {
-                                String status =
-                                    wiRef.watch(loginStatusProvider);
-                                if (status == 'Loading') {
-                                  return DView.loadingCircle();
-                                }
-                                return ElevatedButton(
-                                  onPressed: () => execute(),
-                                  style: const ButtonStyle(
-                                    alignment: Alignment.centerLeft,
-                                  ),
-                                  child: const Text(
-                                    'Login',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // Widget untuk Header (Judul Aplikasi & Subjudul)
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppConstants.appName,
+          style: GoogleFonts.montserrat(
+            fontSize: 40,
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            shadows: [
+              const Shadow(
+                blurRadius: 10.0,
+                color: Colors.black45,
+                offset: Offset(2.0, 2.0),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Sign in to your account',
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: Colors.white70,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Widget untuk Form dengan efek "Frosted Glass"
+  Widget _buildGlassmorphismForm() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
+              width: 1.5,
+            ),
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildEmailField(),
+                const SizedBox(height: 20),
+                _buildPasswordField(),
+                const SizedBox(height: 25),
+                _buildLoginButton(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Widget untuk Input Email
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: edtEmail,
+      validator: (input) => input == '' ? "Email cannot be empty" : null,
+      keyboardType: TextInputType.emailAddress,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: 'Email',
+        labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+        prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.white, width: 1.5),
+        ),
+      ),
+    );
+  }
+
+  // Widget untuk Input Password
+  Widget _buildPasswordField() {
+    return TextFormField(
+      controller: edtPassword,
+      validator: (input) => input == '' ? "Password cannot be empty" : null,
+      obscureText: !isPasswordVisible,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: 'Password',
+        labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+        prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
+        suffixIcon: IconButton(
+          icon: Icon(
+            isPasswordVisible
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            color: Colors.white.withOpacity(0.7),
+          ),
+          onPressed: () {
+            setState(() {
+              isPasswordVisible = !isPasswordVisible;
+            });
+          },
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.white, width: 1.5),
+        ),
+      ),
+    );
+  }
+
+  // Widget untuk Tombol Login
+  Widget _buildLoginButton() {
+    return Consumer(builder: (_, wiRef, __) {
+      String status = wiRef.watch(loginStatusProvider);
+      if (status == 'Loading') {
+        return Center(child: DView.loadingCircle());
+      }
+      return SizedBox(
+        height: 50,
+        child: ElevatedButton(
+          onPressed: () => execute(),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            textStyle: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          child: const Text('Sign In'),
+        ),
+      );
+    });
+  }
+
+  // Widget untuk Navigasi ke Halaman Register
+  Widget _buildRegisterRedirect() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Don't have an account? ",
+          style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
+        ),
+        GestureDetector(
+          onTap: () {
+            Nav.push(context, const RegisterPage());
+          },
+          child: Text(
+            'Register Now',
+            style: GoogleFonts.poppins(
+              color: AppColors.primary, // Gunakan warna primer yang menonjol
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              decoration: TextDecoration.underline,
+              decorationColor: AppColors.primary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

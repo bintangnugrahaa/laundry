@@ -21,6 +21,8 @@ class AppFormat {
     return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 
+  /// source: DateTime | String\
+  /// Monday, 2 Jan 23
   static String shortDate(source) {
     switch (source.runtimeType) {
       case String:
@@ -32,6 +34,8 @@ class AppFormat {
     }
   }
 
+  /// source: DateTime | String\
+  /// Monday, 2 January 2023
   static String fullDate(source) {
     switch (source.runtimeType) {
       case String:

@@ -1,14 +1,18 @@
-import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/pages/dashboard_view/account_view.dart';
+
+import '../pages/dashboard_views/account_view.dart';
+import '../pages/dashboard_views/home_view.dart';
+import '../pages/dashboard_views/my_laundry_view.dart';
 
 class AppConstants {
-  static const appName = 'Star Laundry';
+  static const appName = 'Di Laundry';
 
   static const _host = 'http://192.168.1.9:8000';
 
+  /// ``` baseURL = 'http://192.168.1.9:8000/api' ```
   static const baseURL = '$_host/api';
 
+  /// ``` baseURL = 'http://192.168.1.9:8000/storage' ```
   static const baseImageURL = '$_host/storage';
 
   static const laundryStatusCategory = [
@@ -25,12 +29,12 @@ class AppConstants {
 
   static List<Map> navMenuDashboard = [
     {
-      'view': DView.empty('Home'),
+      'view': const HomeView(),
       'icon': Icons.home_filled,
       'label': 'Home',
     },
     {
-      'view': DView.empty('My Laundry'),
+      'view': const MyLaundryView(),
       'icon': Icons.local_laundry_service,
       'label': 'My Laundry',
     },

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/config/app_colors.dart';
-import 'package:frontend/config/app_session.dart';
-import 'package:frontend/pages/auth/login_page.dart';
-import 'package:frontend/pages/dashboard_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'config/app_colors.dart';
+import 'config/app_session.dart';
+import 'pages/auth/login_page.dart';
+import 'pages/dashboard_page.dart';
 
 void main() {
   runApp(
     const ProviderScope(
-      child: MyApp(),
+      child: MainApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +32,16 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.latoTextTheme(),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            backgroundColor: const WidgetStatePropertyAll(AppColors.primary),
-            shape: WidgetStatePropertyAll(
+            backgroundColor: const MaterialStatePropertyAll(AppColors.primary),
+            shape: MaterialStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            padding: const WidgetStatePropertyAll(
+            padding: const MaterialStatePropertyAll(
               EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
-            textStyle: const WidgetStatePropertyAll(
+            textStyle: const MaterialStatePropertyAll(
               TextStyle(fontSize: 15),
             ),
           ),
